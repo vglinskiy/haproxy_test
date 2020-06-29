@@ -1,0 +1,34 @@
+! device: veos-router (vEOS, EOS-4.23.0F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+transceiver qsfp default-mode 4x10G
+!
+hostname veos-router
+!
+spanning-tree mode mstp
+!
+aaa authorization exec default local
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$j8CewEwccbY.dZ1U$EVl6uf/E0S.74iJRN6LGhDypj0Rzxl5mt0UDieiI7qzg4SeVSut40hzBGLNfb.qiZShk.4NnTvmop0/xZJ8rn.
+!
+interface Ethernet1
+   no switchport
+   ip address 192.168.88.1/24
+!
+interface Ethernet2
+   no switchport
+   ip address 192.168.99.1/24
+!
+interface Ethernet3
+   no switchport
+   ip address 192.168.101.1/24
+!
+interface Management1
+   ip address dhcp
+!
+ip routing
+!
+end
