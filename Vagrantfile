@@ -36,13 +36,13 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
-  config.vm.define "nginx" do |node2|
-    #config.vm.provider :virtualbox do |vb2|
-    #  vb2.name = "nginx"
-    #end
+  config.vm.define "nginx1" do |node2|
+    config.vm.provider :virtualbox do |vb2|
+      vb2.name = "nginx1"
+    end
     node2.vm.box = linux_box
     node2.vm.network "private_network", virtualbox__intnet: "hostB_vtepB", auto_config: false
-    node2.vm.hostname = "nginx"
+    node2.vm.hostname = "nginx1"
     node2.vm.provision "shell", inline: <<-SHELL
       sudo ip link set enp0s8 up
       sudo ip addr add 192.168.101.10/24 dev enp0s8
@@ -50,7 +50,26 @@ Vagrant.configure("2") do |config|
       sudo apt-get update
       sudo apt-get -y install nginx lldpd
       sudo cp /vagrant/nginx.conf /etc/nginx
-      sudo cp /vagrant/index.html /var/www/html
+      sudo cp /vagrant/index1.html /var/www/html/index.html
+      sudo systemctl restart nginx
+    SHELL
+  end
+
+  config.vm.define "nginx2" do |node2|
+    config.vm.provider :virtualbox do |vb2|
+      vb2.name = "nginx2"
+    end
+    node2.vm.box = linux_box
+    node2.vm.network "private_network", virtualbox__intnet: "hostB_vtepB", auto_config: false
+    node2.vm.hostname = "nginx2"
+    node2.vm.provision "shell", inline: <<-SHELL
+      sudo ip link set enp0s8 up
+      sudo ip addr add 192.168.101.20/24 dev enp0s8
+      sudo ip route add 192.168.0.0/16 via 192.168.101.1
+      sudo apt-get update
+      sudo apt-get -y install nginx lldpd
+      sudo cp /vagrant/nginx.conf /etc/nginx
+      sudo cp /vagrant/index2.html /var/www/html/index.html
       sudo systemctl restart nginx
     SHELL
   end
